@@ -625,7 +625,7 @@ class InstaPy:
         followed_all = 0
         followed_new = 0
         relax_point = random.randint(7, 14)   # you can use some plain value `10` instead of this quitely randomized score
-
+        my_followers = self.grab_followers(username=self.username, amount="full", live_match=False, store_locally=True)
         for username in usernames:
             photo_urls = get_photo_urls_from_profile(self.browser, username, photos_grab_amount, randomize)
             sleep(1)
@@ -638,6 +638,10 @@ class InstaPy:
                 random.shuffle(likers)
 
                 for liker in likers[:follow_likers_per_photo] :
+                    if liker in my_followers:
+                        self.logger.info(
+                            "Hey.. this user is already following you   ~skipped following {}".format(liker))
+                        continue
                     followed = self.follow_by_list(liker, self.follow_times, sleep_delay, interact)
                     if followed > 0:
                         followed_all += 1
